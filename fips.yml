@@ -1,0 +1,8 @@
+# fips-sdl-mixer
+---
+
+exports:
+    header-dirs:
+        - SDL_gpu/include
+    modules:
+        SDL2_gpu: .
