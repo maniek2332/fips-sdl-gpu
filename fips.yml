@@ -4,5 +4,6 @@
 exports:
     header-dirs:
         - SDL_gpu/include
+        - SDL_gpu/common
     modules:
         SDL2_gpu: .

@@ -17,6 +17,7 @@ set(SDL_gpu_SRCS
     SDL_gpu/src/renderer_GLES_1.c
     SDL_gpu/src/renderer_GLES_2.c
     SDL_gpu/src/renderer_GLES_3.c
+    SDL_gpu/common/common.c
 )
 
 set(SDL_gpu_HDRS
@@ -45,22 +46,25 @@ if(FIPS_ANDROID)
         ${ANDROID_GLES1_LIBRARY}
     )
 	add_definitions("-DSDL_GPU_DISABLE_OPENGL")
+	add_definitions("-DSDL_GPU_DISABLE_GLES_3")
 else()
 	find_package(OpenGL REQUIRED)
 	include_directories(${OPENGL_INCLUDE_DIR})
     set(SDL_gpu_GL_LIBRARIES ${OPENGL_LIBRARIES})
 	add_definitions("-DSDL_GPU_DISABLE_GLES")
+	fips_libs(${SDL_gpu_GL_LIBRARIES})
 endif()
 
 # target_link_libraries(SDL_gpu_shared ${SDL_gpu_GL_LIBRARIES})
-fips_libs(${SDL_gpu_GL_LIBRARIES})
 
 
+if(NOT FIPS_ANDROID)
 # Using bundled glew
-SET(SDL_gpu_SRCS ${SDL_gpu_SRCS} SDL_gpu/src/externals/glew/glew.c)
-SET(SDL_gpu_HDRS ${SDL_gpu_HDRS} SDL_gpu/src/externals/glew/GL/glew.h SDL_gpu/src/externals/glew/GL/glxew.h SDL_gpu/src/externals/glew/GL/wglew.h)
-fips_include_directories(SDL_gpu/src/externals/glew/GL)
-add_definitions("-DGLEW_STATIC")
+    SET(SDL_gpu_SRCS ${SDL_gpu_SRCS} SDL_gpu/src/externals/glew/glew.c)
+    SET(SDL_gpu_HDRS ${SDL_gpu_HDRS} SDL_gpu/src/externals/glew/GL/glew.h SDL_gpu/src/externals/glew/GL/glxew.h SDL_gpu/src/externals/glew/GL/wglew.h)
+    fips_include_directories(SDL_gpu/src/externals/glew/GL)
+    add_definitions("-DGLEW_STATIC")
+endif()
 
 # Using bundlew stbi
 SET(SDL_gpu_SRCS ${SDL_gpu_SRCS} SDL_gpu/src/externals/stb_image/stb_image.c)
